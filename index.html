@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Text Editor</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+  	<link rel="stylesheet" href="https://unpkg.com/tachyons/css/tachyons.min.css">
+  	<style type="text/css">
+  		#published{
+  			display:none;
+  			margin: 50px auto;
+  		}
+  	</style>
+</head>
+<body>
+	<div class="header tc">
+		<h1>Text-Editor</h1>
+	</div>
+	<hr>
+	<div class="mw5 mw7-ns center bg-light-gray pa3 ph5-ns">
+		<form class="pa4 black-80">
+			  <div >
+			    <label for="textarea" class="f6 b db mb2">Editor </label>
+			    <input  contenteditable="true" id="textInput" name="text" class="db border-box hover-black w-100 measure ba b--black-20 pa2 br2 mb2" aria-describedby="textarea" value="a _anshul_ n ^anshul^ shul *text between first star* ^anshul^ *text between second star* _anshul_^anshul^  [anshul] *text between second star* ^second^ _anshul_ [anshul]  [anshul] "></input>
+
+			  </div>
+		  	<div class="ph3 tc">
+		  		<a class="f6 grow no-underline br-pill ph3 pv2 mb2 dib white bg-mid-gray" href="#0" id="myForm">Publish</a>
+			</div>
+		</form>
+	</div>
+	<div class="pa3 pa5-ns center bg-light-gray" id="published">
+		
+	</div>
+
+<script type="text/javascript">
+	document.getElementById('myForm').addEventListener('click', publish);
+	function publish(e){
+		var textInput= document.getElementById('textInput').value;
+		var published= document.getElementById('published');
+		var inputIndex = textInput.split('');
+		var numbIndex = []; 
+		var fontNumb = [];
+		var underlineNumb = []; 
+		var linkNumb = [];
+		var listStar = [];
+		var fontStar = [];
+		var underlineStar =[];
+		var linkStar =[];
+
+		//Star section
+		for(var i=0; i<inputIndex.length; i++){
+			if(inputIndex[i] == "*"){
+				numbIndex.push(i);
+			}
+		}
+
+		for(var i = 1; i<=numbIndex.length; i+=2){
+			var starIndex = {
+					"firstIndex" : "",
+					"secondIndex":""
+				}
+				if(i%2 !== 0){
+				starIndex.firstIndex = numbIndex[i-1];
+			}
+			if((i+1)%2 == 0){
+				starIndex.secondIndex = numbIndex[i];
+			}
+		listStar.push(starIndex);
+
+		}
+		var finalTextAfterStar='';
+		for(var i=0; i<listStar.length; i++){
+
+			if(i==0){
+			finalTextAfterStar = textInput.substring(0, listStar[i].firstIndex+1) + textInput.substring(listStar[i].firstIndex+1, listStar[i].secondIndex).bold() + textInput.substr(listStar[i].secondIndex);
+			}else{
+				finalTextAfterStar = finalTextAfterStar.substring(0, listStar[i].firstIndex+7*i) + finalTextAfterStar.substring(listStar[i].firstIndex+7*i, listStar[i].secondIndex +7*i).bold() + finalTextAfterStar.substr(listStar[i].secondIndex+7*i);
+			}
+			
+		}
+		//Font Weight
+		var fontIndex = finalTextAfterStar.split('');
+		for(var i=0; i<fontIndex.length; i++){
+			if(fontIndex[i] == "^"){
+				fontNumb.push(i);
+			}
+		}
+
+		for(var i = 1; i<=fontNumb.length; i+=2){
+			var fontIndex = {
+					"firstIndex" : "",
+					"secondIndex":""
+				}
+				if(i%2 !== 0){
+				fontIndex.firstIndex = fontNumb[i-1];
+			}
+			if((i+1)%2 == 0){
+				fontIndex.secondIndex = fontNumb[i];
+			}
+		fontStar.push(fontIndex);
+
+		}
+		for(var i=0; i<fontStar.length; i++){
+
+			if(i==0){
+			finalTextAfterStar = finalTextAfterStar.substring(0, fontStar[i].firstIndex+1) + finalTextAfterStar.substring(fontStar[i].firstIndex+1, fontStar[i].secondIndex).fontsize(10) + finalTextAfterStar.substr(fontStar[i].secondIndex);
+			}else{
+				var finalTextAfterStar =finalTextAfterStar.substring(0, fontStar[i].firstIndex+23*i + 1)  + finalTextAfterStar.substring(fontStar[i].firstIndex+23*i +1, fontStar[i].secondIndex +23*i).fontsize(10) + finalTextAfterStar.substr(fontStar[i].secondIndex+23*i);
+			}
+			
+		}
+		//underline Mark
+		var underlineIndex = finalTextAfterStar.split('');
+		for(var i=0; i<underlineIndex.length; i++){
+			if(underlineIndex[i] == "_"){
+				underlineNumb.push(i);
+			}
+		}
+		for(var i = 1; i<=underlineNumb.length; i+=2){
+			var underlineIndex = {
+					"firstIndex" : "",
+					"secondIndex":""
+				}
+				if(i%2 !== 0){
+				underlineIndex.firstIndex = underlineNumb[i-1];
+			}
+			if((i+1)%2 == 0){
+				underlineIndex.secondIndex = underlineNumb[i];
+			}
+		underlineStar.push(underlineIndex);
+
+		}
+		for(var i=0; i<underlineStar.length; i++){
+
+			if(i==0){
+			finalTextAfterStar = finalTextAfterStar.substring(0, underlineStar[i].firstIndex+1) + '<span style="text-decoration:underline">' + finalTextAfterStar.substring(underlineStar[i].firstIndex+1, underlineStar[i].secondIndex) + '</span>' + finalTextAfterStar.substr(underlineStar[i].secondIndex);
+			}else{
+				var finalTextAfterStar =finalTextAfterStar.substring(0, underlineStar[i].firstIndex+ 47*i + 1) +  '<span style="text-decoration:underline">' + finalTextAfterStar.substring(underlineStar[i].firstIndex+47*i +1, underlineStar[i].secondIndex +47*i) +  '</span>' + finalTextAfterStar.substr(underlineStar[i].secondIndex+47*i);
+			}
+			
+		}
+		//link marker
+		var linkIndex = finalTextAfterStar.split('');
+		for(var i=0; i<linkIndex.length; i++){
+			if(linkIndex[i] == "["){
+				linkNumb.push(i);
+			}if(linkIndex[i] == "]"){
+				linkNumb.push(i);
+			}
+		}
+		for(var i = 1; i<=linkNumb.length; i+=2){
+			var linkIndex = {
+					"firstIndex" : "",
+					"secondIndex":""
+				}
+				if(i%2 !== 0){
+				linkIndex.firstIndex = linkNumb[i-1];
+			}
+			if((i+1)%2 == 0){
+				linkIndex.secondIndex = linkNumb[i];
+			}
+		linkStar.push(linkIndex);
+
+		}
+		for(var i=0; i<linkStar.length; i++){
+
+			if(i==0){
+			finalTextAfterStar = finalTextAfterStar.substring(0, linkStar[i].firstIndex+1)  + finalTextAfterStar.substring(linkStar[i].firstIndex+1, linkStar[i].secondIndex).link()  + finalTextAfterStar.substr(linkStar[i].secondIndex);
+			}else{
+				var finalTextAfterStar =finalTextAfterStar.substring(0, linkStar[i].firstIndex+ 24*i + 1)  + finalTextAfterStar.substring(linkStar[i].firstIndex+24*i +1, linkStar[i].secondIndex +24*i).link()  + finalTextAfterStar.substr(linkStar[i].secondIndex+24*i);
+			}
+			
+		}
+		if(finalTextAfterStar !== ""){
+		var updatedInputText = finalTextAfterStar.replace(/\*/g, '').replace(/\^/g, '').replace(/\_/g, '').replace(/\[/g, '').replace(/\]/g, '');
+		}else{
+			var updatedInputText = textInput;
+		}
+		
+		console.log(updatedInputText);
+
+		published.style.display = "block";
+		published.innerHTML = '<div>' + '<p>' + updatedInputText
+								+ '</p>'
+								+ '</div>';
+
+		e.preventDefault();
+
+	}
+	
+</script>
+</body>
+</html>
